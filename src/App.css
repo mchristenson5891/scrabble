@@ -42,3 +42,8 @@ table {
 .players-tiles {
   margin-top: 25px;
 }
+
+td {
+  text-align: center;
+}
+
