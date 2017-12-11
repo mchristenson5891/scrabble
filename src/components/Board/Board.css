@@ -1,0 +1,8 @@
+[data-postition="0-0"] {
+  background-color: red;
+}
+
+[data-postition="0-0"]::after {
+  content: "triple";
+  font-size:13px;
+}
