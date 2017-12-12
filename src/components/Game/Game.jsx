@@ -20,8 +20,8 @@ export function moveTile(toX, toY) {
 }
 
 export function updateLetter(letter) {
-  console.log("????", letter)
-  tileLetter = letter
+  tileLetter = letter;
+  emitChange();
 }
 
 export function canMoveTile(toX, toY) {

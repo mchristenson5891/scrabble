@@ -9,10 +9,11 @@ let letter;
 
 const squareTarget = {
   canDrop(props) {
-    return canMoveTile(props.x, props.y)
+    return props.isSquareOccupied(props.x, props.y)
   },
 
   drop(props, monitor, component) {
+    console.log("this is hit!!!!!")
     moveTile(props.x, props.y, props.letter)
     props.updateBoard(props.y, props.x);
   }

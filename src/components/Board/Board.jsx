@@ -27,7 +27,14 @@ class Board extends Component {
     const [tileX, tileY] = this.props.tilePosition;
 
     return (
-        <BoardSquare key={i} x={x} y={y} updateBoard={this.props.updateBoard}>{this.renderTile(x,y)}</BoardSquare>
+        <BoardSquare 
+          key={i} x={x} y={y} 
+          updateBoard={this.props.updateBoard } 
+          removeFromRack={this.props.removeFromRack}
+          isSquareOccupied={this.props.isSquareOccupied}
+        >
+          {this.renderTile(x,y)}
+        </BoardSquare>
     )
   }
 
@@ -35,7 +42,7 @@ class Board extends Component {
     const [tileX, tileY] = this.props.tilePosition;
     const letter = this.props.board[y][x]
     if(letter != 0) {
-      return <Tile letter={letter} tilePosition={this.props.tilePosition} updatePerviousPosition={this.props.updatePerviousPosition}/>
+      return <Tile updateCurrentLetter={this.props.updateCurrentLetter} letter={letter} tilePosition={this.props.tilePosition} updatePerviousPosition={this.props.updatePerviousPosition}/>
     }
   }
 

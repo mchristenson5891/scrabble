@@ -34,7 +34,8 @@ class App extends Component {
       't','t','t','t','t','u','u','u','u',
       'v','v','w','w','x','y','y','z',' ',
       ' '],
-      prevPosition : [0,0]
+      prevPosition : [0,0],
+      currentLetter : ""
     };
   }
 
@@ -64,27 +65,34 @@ class App extends Component {
     return board
   }
 
+  updateCurrentLetter = (letter) => {
+    this.setState({
+      currentLetter : letter
+    })
+  }
+
   updateBoard = (y, x) => {
     let boardCopy = this.state.board.slice();
-    console.log(this.state.prevPosition, boardCopy[this.state.prevPosition[0]][this.state.prevPosition[1]])
-    if(boardCopy[this.state.prevPosition[0]][this.state.prevPosition[1]] === this.props.letter) {
+    if(boardCopy[this.state.prevPosition[0]][this.state.prevPosition[1]] === this.state.currentLetter) {
       boardCopy[this.state.prevPosition[0]][this.state.prevPosition[1]] = 0
     }
-    console.log(boardCopy)
-    boardCopy[y][x] = this.props.letter
+    if(boardCopy[y][x] ===  0) boardCopy[y][x] = this.state.currentLetter 
     this.setState({
       board : boardCopy,
     })
   }
 
-  updatePerviousPosition = (y,x) => {
+  isSquareOccupied = (x,y) => {
+    return (this.state.board[y][x] === 0) ? true : false;
+  }
+
+  updatePerviousPosition = (y,x) => { 
     this.setState({
       prevPosition: [x,y]
     })
   }
 
   removeFromRack = (idx) => {
-    console.log(idx)
     let playersRackCopy = this.state.playersRack.slice();
     playersRackCopy.splice(idx, 1, 0)
     this.setState({
@@ -92,13 +100,29 @@ class App extends Component {
     })
   }
 
+  addToRack = () => {
+    let boardCopy = this.state.board.slice();
+    let playersRackCopy = this.state.playersRack.slice();
+    let index = playersRackCopy.indexOf(0);
+    playersRackCopy.splice(index, 1, this.state.currentLetter)
+    boardCopy[this.state.prevPosition[0]][this.state.prevPosition[1]] = ""
+    this.setState({
+      playersRack: playersRackCopy
+    });
+  }
+
 
   render() {
     const { tilePosition, letter } = this.props
     return (
       <table>
-        <Board tilePosition={tilePosition} updateBoard={this.updateBoard} board={this.state.board} updatePerviousPosition={this.updatePerviousPosition} />
-        <Rack removeFromRack={this.removeFromRack}tiles={this.state.tiles} playersRack={this.state.playersRack} updatePerviousPosition={this.updatePerviousPosition}/>
+        <Board 
+          updateCurrentLetter={this.updateCurrentLetter} 
+          tilePosition={tilePosition} 
+          updateBoard={this.updateBoard} board={this.state.board} updatePerviousPosition={this.updatePerviousPosition}
+          isSquareOccupied={this.isSquareOccupied}
+        />
+        <Rack removeFromRack={this.removeFromRack} addToRack={this.addToRack} tiles={this.state.tiles} playersRack={this.state.playersRack} updatePerviousPosition={this.updatePerviousPosition} updateCurrentLetter={this.updateCurrentLetter}/>
       </table>
     );
   }
