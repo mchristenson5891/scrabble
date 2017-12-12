@@ -7,11 +7,11 @@ export default class Square extends Component {
   }
 
   render() {
-    const { black, handleSquareClick, x, y} = this.props
-    const fill = black ? 'black' : 'white';
+    // const { black, handleSquareClick, x, y} = this.props
+    // const fill = black ? 'black' : 'white';
 
     return (
-      <span style={{ backgroundColor: fill}}>
+      <span>
         {this.props.children}
       </span>
     ) 

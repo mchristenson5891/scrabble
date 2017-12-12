@@ -6,9 +6,9 @@ import Board from './components/Board/Board'
 import { observe } from './components/Game/Game';
 
 const rootEl = document.getElementById('root');
-observe(tilePosition => 
+observe((tilePosition, letter) =>
   ReactDOM.render(
-    <Board tilePosition={tilePosition} />,
+    <App tilePosition={tilePosition} letter={letter}/>,
     rootEl 
   )
 )

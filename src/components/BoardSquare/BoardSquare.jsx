@@ -5,14 +5,16 @@ import { ItemTypes } from './../Constants/Constants';
 import { DropTarget } from 'react-dnd';
 import { canMoveTile, moveTile } from './../Game/Game'
 
+let letter;
+
 const squareTarget = {
   canDrop(props) {
     return canMoveTile(props.x, props.y)
   },
 
-  drop(props) {
-    console.log("IM IN")
-    moveTile(props.x, props.y)
+  drop(props, monitor, component) {
+    moveTile(props.x, props.y, props.letter)
+    props.updateBoard(props.y, props.x);
   }
 }
 
@@ -32,14 +34,15 @@ class BoardSquare extends Component {
     isOver: PropTypes.bool.isRequired
   };
 
+
   render() {
-    const { x, y, handleSquareClick, connectDropTarget, isOver, canDrop } = this.props;
+    const { x, y, connectDropTarget, isOver, canDrop } = this.props;
     // const black = (x + y) % 2 === 1;
     return connectDropTarget(
       <td style={{
         position: 'relative',
       }}>
-        <Square handleSquareClick={handleSquareClick} x={x} y={y}>
+        <Square x={x} y={y}>
           {this.props.children}
           {isOver && canDrop && <span style={{
             position: 'absolute',
