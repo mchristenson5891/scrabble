@@ -1,14 +1,8 @@
-import React, { Component }from 'react'
+import React, { Component }from 'react';
 import PropTypes from 'prop-types';
-import './Board.css'
-// import Square from './../Square/Square'
-import Rack from './../Rack/Rack'
-import Tile from './../Tile/Tile'
-import BoardSquare from './../BoardSquare/BoardSquare'
-import { moveTile } from './../Game/Game'
-import { DragDropContext } from 'react-dnd'
-import HTML5Backend from 'react-dnd-html5-backend'
-
+import './Board.css';
+import Tile from './../Tile/Tile';
+import BoardSquare from './../BoardSquare/BoardSquare';
 
 class Board extends Component {
   static propTypes = {
@@ -17,14 +11,9 @@ class Board extends Component {
     ).isRequired
   }
 
-  grabLetter(letter) {
-    console.log(letter);
-  }
-
   renderSquare(i) {
     const x = i % 15;
     const y = Math.floor(i / 15 );
-    const [tileX, tileY] = this.props.tilePosition;
 
     return (
         <BoardSquare 
@@ -32,6 +21,7 @@ class Board extends Component {
           updateBoard={this.props.updateBoard } 
           removeFromRack={this.props.removeFromRack}
           isSquareOccupied={this.props.isSquareOccupied}
+          firstTurn={this.props.firstTurn}
         >
           {this.renderTile(x,y)}
         </BoardSquare>
@@ -39,10 +29,12 @@ class Board extends Component {
   }
 
   renderTile(x,y) {
-    const [tileX, tileY] = this.props.tilePosition;
-    const letter = this.props.board[y][x]
-    if(letter != 0) {
-      return <Tile updateCurrentLetter={this.props.updateCurrentLetter} letter={letter} tilePosition={this.props.tilePosition} updatePerviousPosition={this.props.updatePerviousPosition}/>
+    const boardLetter = this.props.board[y][x]
+    const moveableTile = this.props.tempBoard[y][x]
+    if(boardLetter !== 0) {
+      return <div className='tile'>{boardLetter.toUpperCase()}</div>
+    }else if(moveableTile !== 0) {   
+      return <Tile updateCurrentLetter={this.props.updateCurrentLetter} letter={moveableTile} tilePosition={this.props.tilePosition} updatePerviousPosition={this.props.updatePerviousPosition}/>
     }
   }
 
@@ -59,37 +51,13 @@ class Board extends Component {
     }
 
     return (
-      <main>
         <table>
           <tbody>
             {rows}
           </tbody>
         </table>
-      </main>
     )
   }
 }
 
 export default Board;
-
-// const Board = ({board}) => {
-//   return (
-//     <table>
-//       <tbody>
-//         {board.map((row, index) => {
-//           return (
-//             <tr>{
-//               row.map( (square, idx) => {
-//                 return (
-//                   <td data-postition={[idx, index].join('-')}>{square ? square : ""}</td>
-//                 )
-//               })
-//             }</tr>
-//           )
-//         })}
-//       </tbody>
-//     </table>
-//   )
-// }
-
-// export default Board;

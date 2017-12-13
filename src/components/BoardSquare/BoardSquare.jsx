@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 import Square from './../Square/Square';
 import { ItemTypes } from './../Constants/Constants';
 import { DropTarget } from 'react-dnd';
-import { canMoveTile, moveTile } from './../Game/Game'
-
-let letter;
+import { moveTile } from './../Game/Game'
 
 const squareTarget = {
   canDrop(props) {
+    if(props.firstTurn) {
+
+    }
     return props.isSquareOccupied(props.x, props.y)
   },
 
   drop(props, monitor, component) {
-    console.log("this is hit!!!!!")
     moveTile(props.x, props.y, props.letter)
     props.updateBoard(props.y, props.x);
   }
@@ -35,12 +35,10 @@ class BoardSquare extends Component {
     isOver: PropTypes.bool.isRequired
   };
 
-
   render() {
     const { x, y, connectDropTarget, isOver, canDrop } = this.props;
-    // const black = (x + y) % 2 === 1;
     return connectDropTarget(
-      <td style={{
+      <td className={(y === 7 && x === 7) && "middle"}style={{
         position: 'relative',
       }}>
         <Square x={x} y={y}>
