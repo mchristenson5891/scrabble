@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import './Board.css';
 import Tile from './../Tile/Tile';
 import BoardSquare from './../BoardSquare/BoardSquare';
+import { TileScores } from './../Constants/Constants';
 
 class Board extends Component {
   static propTypes = {
@@ -21,7 +22,8 @@ class Board extends Component {
           updateBoard={this.props.updateBoard } 
           removeFromRack={this.props.removeFromRack}
           isSquareOccupied={this.props.isSquareOccupied}
-          firstTurn={this.props.firstTurn}
+          board={this.props.board}
+          tempBoard={this.props.tempBoard}
         >
           {this.renderTile(x,y)}
         </BoardSquare>
@@ -32,7 +34,10 @@ class Board extends Component {
     const boardLetter = this.props.board[y][x]
     const moveableTile = this.props.tempBoard[y][x]
     if(boardLetter !== 0) {
-      return <div className='tile'>{boardLetter.toUpperCase()}</div>
+      return <div>
+              <span className='ScrabbleLetter'>{boardLetter.toUpperCase()}</span>
+              <span className='ScrabbleNumber'>{TileScores[boardLetter]}</span>
+            </div>
     }else if(moveableTile !== 0) {   
       return <Tile updateCurrentLetter={this.props.updateCurrentLetter} letter={moveableTile} tilePosition={this.props.tilePosition} updatePerviousPosition={this.props.updatePerviousPosition}/>
     }
@@ -51,7 +56,7 @@ class Board extends Component {
     }
 
     return (
-        <table>
+        <table className='box-table-b'>
           <tbody>
             {rows}
           </tbody>

@@ -1,0 +1,21 @@
+/* .playBtn {
+  position: absolute;
+  margin-left: 12px;
+  border:none;
+  cursor: pointer;
+  background: url(http://www.lynnettechadwick.com/wp-content/uploads/2015/04/play-button.png)
+  center center
+  no-repeat;
+  background-size: cover;
+} */
+
+.playBtn {
+  position: absolute;
+  margin-left: 12px;
+  border:none;
+  cursor: pointer;
+  background: url(http://www.hypebot.com/.a/6a00d83451b36c69e201bb09b0b161970d-600wi)
+  center center
+  no-repeat;
+  background-size: cover;
+}

@@ -1,0 +1,46 @@
+td.tw {
+  background: url(https://i1.wp.com/europeisnotdead.com/wp-content/uploads/2012/09/european-longest-words-triple-word-score1.png)
+  center center
+  no-repeat
+  #c7c0a4;
+  background-size: cover;
+}
+
+td.tl {
+  background: url(https://i2.wp.com/europeisnotdead.com/wp-content/uploads/2012/09/european-longest-words-triple-letter-score.png)
+  center center
+  no-repeat
+  #c7c0a4;
+  background-size: cover;
+}
+
+/* .tl:before {
+  content: 'Triple Letter';
+  font-size: 12px;
+  color:#7c2b17;
+} */
+
+td.dl {
+  background: url(https://i1.wp.com/europeisnotdead.com/wp-content/uploads/2012/09/european-longest-words-double-letter-score.png)
+  center center
+  no-repeat
+  #c7c0a4;
+  background-size: cover;
+}
+
+td.dw {
+  background: url(https://i1.wp.com/europeisnotdead.com/wp-content/uploads/2012/09/european-longest-words-double-word-score.png)
+  center center
+  no-repeat
+  #c7c0a4;
+  background-size: cover;
+}
+
+td.middle {
+  background: url(https://i1.wp.com/europeisnotdead.com/wp-content/uploads/2012/09/european-longest-words-star-score1.png)
+  center center
+  no-repeat
+  #c7c0a4;
+  background-size: cover;
+
+}

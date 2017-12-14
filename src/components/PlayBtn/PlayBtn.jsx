@@ -1,9 +1,8 @@
 import React from 'react';
-
-
-const PlayBtn = ({submitWord}) => {
+import './PlayBtn.css'
+const PlayBtn = ({ submitWord }) => {
   return (
-    <td onClick={() => submitWord() }>Play</td>
+    <td onClick={() => submitWord() } className='playBtn' ></td>
   )
 }
   

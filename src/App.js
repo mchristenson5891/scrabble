@@ -1,38 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
-import Board from './components/Board/Board'
-import Rack from './components/Rack/Rack'
-import HTML5Backend from 'react-dnd-html5-backend'
-import { DragDropContext } from 'react-dnd'
-
- const tileScores = {
-      a: 1,
-      b: 3,
-      c: 3,
-      d: 2,
-      e: 1,
-      f: 4,
-      g: 2,
-      h: 4,
-      i: 1,
-      j: 8,
-      k: 5,
-      l: 1,
-      m: 3,
-      n: 1,
-      o: 1,
-      p: 3,
-      q: 10,
-      r: 1,
-      s: 1,
-      t: 1,
-      u: 1,
-      v: 4,
-      w: 4,
-      x: 8,
-      y: 4,
-      z: 10
- }
+import Board from './components/Board/Board';
+import Rack from './components/Rack/Rack';
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext } from 'react-dnd';
+import { TileScores, DoubleLetterTiles, TripleLetterTiles, DoubleWordTiles, TripleWordTiles } from './components/Constants/Constants';
 
 
 class App extends Component {
@@ -178,14 +150,18 @@ class App extends Component {
     let tempBoardCopy = this.state.tempBoard.slice();
     let playersRackCopy = this.state.playersRack.slice();
     let index = playersRackCopy.indexOf(0);
-    let currentWordCopy = this.state.currentWord.slice();
-    playersRackCopy.splice(index, 1, this.state.currentLetter)
-    currentWordCopy = this.moveCurrentWordPosition(currentWordCopy);
-    tempBoardCopy[this.state.prevPosition[0]][this.state.prevPosition[1]] = 0;
-    this.setState({
-      playersRack : playersRackCopy,
-      currentWord : currentWordCopy
-    });
+    if(index === -1) {
+      return
+    } else {
+      let currentWordCopy = this.state.currentWord.slice();
+      playersRackCopy.splice(index, 1, this.state.currentLetter)
+      currentWordCopy = this.moveCurrentWordPosition(currentWordCopy);
+      tempBoardCopy[this.state.prevPosition[0]][this.state.prevPosition[1]] = 0;
+      this.setState({
+        playersRack : playersRackCopy,
+        currentWord : currentWordCopy
+      });
+    } 
   }
 
   sortCurrentWord = () => {
@@ -215,13 +191,13 @@ class App extends Component {
             currentWord.push([x,i])
           }
         }
-      }else if(this.state.board[x+1][y] !== 0) {
+      }else if(this.state.board[x+1] && (this.state.board[x+1][y] !== 0)) {
         for(let i=x+1; i< 14; i++) {
           if(this.state.board[i][y] !== 0) {
             currentWord.push([i,y])
           }
         }
-      }else if(this.state.board[x-1][y] !== 0) {
+      }else if(this.state.board[x-1] && (this.state.board[x-1][y] !== 0)) {
         for(let i=x-1; i > 0; i--) {
           if(this.state.board[i][y] !== 0) {
             currentWord.push([i,y])
@@ -239,12 +215,7 @@ class App extends Component {
     currentWord = currentWord.map(JSON.stringify).reverse().filter(function (e, i, a) {
       return a.indexOf(e, i+1) === -1;
     }).reverse().map(JSON.parse)
-    // if(this.state.board[currentWord[0][0]][currentWord[0][1] + 1] !== 0) {
-    //   for(let i = currentWord[0][1] + 1 ; i < 14; i++) {
-    //     if(this.state.board[currentWord[0][0]][i] !== 0)
-    //     currentWord.push([[currentWord[0][0]],[i]])
-    //   }
-    // }
+
     return this.makeWord(currentWord)
   }
 
@@ -258,12 +229,26 @@ class App extends Component {
   }
 
   generateScore (word,currentWord) {
-    let sum = 0;
+    let sum = this.state.playerOnesScore;
     let newBoard = this.pushTempBoardToNewBoard();
-    word.forEach(word => sum = sum + tileScores[word])
+    let currentSum = 0;
+    let total = 0;
+    currentWord.forEach(coor => {
+      let [y,x] = coor;
+      let letter = this.state.tempBoard[y][x];
+      console.log(this.state.tempBoard)
+      let bonus = DoubleLetterTiles[`x${x}y${y}`] ? DoubleLetterTiles[`x${x}y${y}`] : TripleLetterTiles[`x${x}y${y}`] ? TripleLetterTiles[`x${x}y${y}`] : 1;
+      currentSum += TileScores[letter] * bonus;
+    })
+    currentWord.forEach(coor => {
+      let [y,x] = coor;
+      let bonus = DoubleWordTiles[`x${x}y${y}`] ? DoubleWordTiles[`x${x}y${y}`] : TripleWordTiles[`x${x}y${y}`] ? TripleWordTiles[`x${x}y${y}`] : 1;
+      currentSum *= bonus;
+    })
+    total = sum + currentSum;
     this.getMoreTiles()
     this.setState({
-      playerOnesScore: sum,
+      playerOnesScore: total,
       currentWord: [],
       firstTurn: false,
       board: newBoard
@@ -292,7 +277,7 @@ class App extends Component {
   render() {
     const { tilePosition } = this.props
     return (
-      <table>
+      <main>
         <Board 
           updateCurrentLetter={this.updateCurrentLetter} 
           tilePosition={tilePosition} 
@@ -303,7 +288,9 @@ class App extends Component {
           firstTurn={this.state.firstTurn}
           tempBoard={this.state.tempBoard}
           currentLetter={this.state.currentLetter}
+          playerOnesScore={this.state.playerOnesScore}
         />
+        <h3 className='score'>Your Score: {this.state.playerOnesScore}</h3>
         <Rack 
           removeFromRack={this.removeFromRack} 
           addToRack={this.addToRack} 
@@ -312,9 +299,9 @@ class App extends Component {
           updatePerviousPosition={this.updatePerviousPosition} 
           updateCurrentLetter={this.updateCurrentLetter}
           submitWord={this.submitWord}
+          tempBoard={this.state.tempBoard}
         />
-        {this.state.playerOnesScore}
-      </table>
+      </main>
     );
   }
 }

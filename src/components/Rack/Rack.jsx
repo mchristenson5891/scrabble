@@ -7,7 +7,6 @@ import { DropTarget } from 'react-dnd';
 const squareTarget = {
   drop(props, monitor, component) {
     props.addToRack();
-    console.log(props, component)
   }
 }
 
@@ -22,16 +21,16 @@ function collect(connect, monitor) {
 class Rack extends Component {
 
   render() {
-    const { playersRack, updatePerviousPosition, removeFromRack, connectDropTarget, updateCurrentLetter, submitWord } = this.props;
+    const { playersRack, updatePerviousPosition, removeFromRack, connectDropTarget, updateCurrentLetter, submitWord, tempBoard } = this.props;
+    console.log(tempBoard)
 
     return connectDropTarget(
       <table className='players-tiles'>
         <tbody>
         <tr>
-          <td>Forfeit</td>
           <td>Exchange</td>
           {playersRack.map((tile, idx) => 
-            <td className={(tile === 0 ? 'white' : 'tile')}>
+            <td key={idx} className={(tile === 0 ? 'white' : null)} id={(tile === 0 ? null : 'ScrabbleBlock')} >
               <Tile 
                 updateCurrentLetter={updateCurrentLetter} isActive={true}
                 tilePosition={[0,0]}
@@ -40,8 +39,7 @@ class Rack extends Component {
                 arrIndx={idx}
               />
             </td>)}
-          <td>Shuffle</td>
-          <PlayBtn submitWord={submitWord} />
+          <PlayBtn tempBoard={tempBoard} submitWord={submitWord} />
         </tr>
       </tbody>
     </table>

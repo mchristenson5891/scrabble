@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Square from './../Square/Square';
-import { ItemTypes } from './../Constants/Constants';
+import { ItemTypes, TileValuesClasses } from './../Constants/Constants';
 import { DropTarget } from 'react-dnd';
-import { moveTile } from './../Game/Game'
+import { moveTile } from './../Game/Game';
+import './BoardSquare.css'
 
 const squareTarget = {
   canDrop(props) {
@@ -36,12 +37,13 @@ class BoardSquare extends Component {
   };
 
   render() {
-    const { x, y, connectDropTarget, isOver, canDrop } = this.props;
+    const { x, y, connectDropTarget, isOver, canDrop, board, tempBoard } = this.props;
+    console.log(this.props.children)
     return connectDropTarget(
-      <td className={(y === 7 && x === 7) && "middle"}style={{
-        position: 'relative',
-      }}>
-        <Square x={x} y={y}>
+      <td className={(TileValuesClasses[`x${x}y${y}`] && board[x][y] === 0 && tempBoard[y][x] === 0) ? TileValuesClasses[`x${x}y${y}`] : null}style={{
+        position: 'relative'
+      }} id={(board[y][x] !== 0 ? 'ScrabbleBlock' : null)}>
+        <Square x={x} y={y} board={board}>
           {this.props.children}
           {isOver && canDrop && <span style={{
             position: 'absolute',
