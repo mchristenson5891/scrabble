@@ -14,3 +14,5 @@ Is a word game in which two score points by placing tiles bearing a single lette
 # Getting Started
 
 [Play](https://powerful-sea-83799.herokuapp.com//)
+
+[My Trello Board](https://trello.com/b/pTATqTkR/scrabble)
