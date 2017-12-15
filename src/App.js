@@ -5,11 +5,6 @@ import Rack from './components/Rack/Rack';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import { TileScores, DoubleLetterTiles, TripleLetterTiles, DoubleWordTiles, TripleWordTiles } from './components/Constants/Constants';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from 'react-router-dom';
 
 
 class App extends Component {
@@ -64,6 +59,7 @@ class App extends Component {
     this.setState({
       tiles : tilesCopy,
       playersRack : rack,
+      activeTiles: false
     })
   }
 
@@ -118,11 +114,6 @@ class App extends Component {
   }
 
   isSquareOccupied = (x,y) => {
-    // console.log(x == y)
-    // console.log("X", x, "Y", y)
-    // if(this.state.firstTurn) {
-    //   return (x/7 === 1 && y !== 0 && y !== 14) && (this.state.tempBoard[y][x] === 0) ? true : false;
-    // }
     return (this.state.tempBoard[y][x] === 0 && this.state.board[y][x] === 0) ? true : false;
   }
 
@@ -216,8 +207,6 @@ class App extends Component {
         }
       }
     })
-    console.log(otherTiles)
-    console.log(currentWord)
 
     if(otherTiles.length === 2 && otherTiles[0][0] === otherTiles[0][1]){
       otherTiles = otherTiles.map(JSON.stringify).reverse().filter(function (e, i, a) {
@@ -239,11 +228,12 @@ class App extends Component {
 
   generateScore (currentWord, otherTiles) {
     let sum = this.state.playerOnesScore;
+    let newBoard = this.pushTempBoardToNewBoard();
     let currentSum = 0;
     let total = 0;
     currentWord.forEach(coor => {
       let [y,x] = coor;
-      let letter = this.state.tempBoard[y][x];
+      let letter = (this.state.board[y][x] !== 0) ? this.state.tempBoard[y][x] : null
       let bonus = DoubleLetterTiles[`x${x}y${y}`] ? DoubleLetterTiles[`x${x}y${y}`] : TripleLetterTiles[`x${x}y${y}`] ? TripleLetterTiles[`x${x}y${y}`] : 1;
       currentSum += TileScores[letter] * bonus;
     })
@@ -253,25 +243,18 @@ class App extends Component {
       currentSum *= bonus;
     })
     otherTiles.forEach(coor => {
-      let [y,x] = coor
-      let letter = this.state.tempBoard[y][x];
-      if(this.state.board[y][x] === 0) {
-        let bonus = DoubleLetterTiles[`x${x}y${y}`] ? DoubleLetterTiles[`x${x}y${y}`] : TripleLetterTiles[`x${x}y${y}`] ? TripleLetterTiles[`x${x}y${y}`] : 1;
-        currentSum += TileScores[letter] * bonus;
-      }
+      let [y,x] = coor;
+      let letter = (this.state.board[y][x] !== 0) ? this.state.tempBoard[y][x] : null
+      sum += TileScores[letter]
     })
     total = sum + currentSum;
-    let newBoard = this.pushTempBoardToNewBoard();
     this.getMoreTiles()
     this.setState({
       playerOnesScore: total,
       currentWord: [],
+      firstTurn: false,
       board: newBoard
-  })
-  }
-
-  updateThisState(score, newBoard) {
-    
+    })
   }
 
   pushTempBoardToNewBoard() {

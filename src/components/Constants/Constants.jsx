@@ -36,7 +36,6 @@ export const TileValuesClasses = {
   'x0y0': 'tw',
   'x0y7': 'tw',
   'x0y14': 'tw',
-  'x7y0': 'tw',
   'x14y0': 'tw',
   'x7y14':'tw',
   'x14y14': 'tw',
