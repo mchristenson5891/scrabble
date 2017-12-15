@@ -5,6 +5,11 @@ import Rack from './components/Rack/Rack';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import { TileScores, DoubleLetterTiles, TripleLetterTiles, DoubleWordTiles, TripleWordTiles } from './components/Constants/Constants';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from 'react-router-dom';
 
 
 class App extends Component {
@@ -59,7 +64,6 @@ class App extends Component {
     this.setState({
       tiles : tilesCopy,
       playersRack : rack,
-      activeTiles: false
     })
   }
 
@@ -183,43 +187,48 @@ class App extends Component {
   }
 
   checkOtherTilesForWords(currentWord) {
+    let otherTiles =[];
     currentWord.forEach(pos => {
       let [x, y] = pos;
       if(this.state.board[x][y+1] !== 0 ) {
         for(let i = y+1; i < 14 ; i++) {
           if(this.state.board[x][i] !== 0) {
-            currentWord.push([x,i])
+            otherTiles.push([x,i],[x,y])
           }
         }
       }else if(this.state.board[x+1] && (this.state.board[x+1][y] !== 0)) {
         for(let i=x+1; i< 14; i++) {
           if(this.state.board[i][y] !== 0) {
-            currentWord.push([i,y])
+            otherTiles.push([i,y],[x,y])
           }
         }
       }else if(this.state.board[x-1] && (this.state.board[x-1][y] !== 0)) {
         for(let i=x-1; i > 0; i--) {
           if(this.state.board[i][y] !== 0) {
-            currentWord.push([i,y])
+            otherTiles.push([i,y],[x,y])
           }
         }
       }else if(this.state.board[x][y-1] !== 0) {
         for(let i=y-1; i > 0; i--) {
           if(this.state.board[x][i] !== 0) {
-            currentWord.push([x,i])
+            otherTiles.push([x,i],[x,y])
           }
         }
       }
-
     })
-    currentWord = currentWord.map(JSON.stringify).reverse().filter(function (e, i, a) {
-      return a.indexOf(e, i+1) === -1;
-    }).reverse().map(JSON.parse)
+    console.log(otherTiles)
+    console.log(currentWord)
 
-    return this.makeWord(currentWord)
+    if(otherTiles.length === 2 && otherTiles[0][0] === otherTiles[0][1]){
+      otherTiles = otherTiles.map(JSON.stringify).reverse().filter(function (e, i, a) {
+        return a.indexOf(e, i+1) === -1;
+      }).reverse().map(JSON.parse)
+    }
+
+    return this.generateScore(currentWord, otherTiles)
   }
 
-  makeWord(currentWord) {
+  makeWord(currentWord, otherTiles) {
     let newWord = [];
     currentWord.forEach(word => {
       let [thisY, thisX] = word;
@@ -228,15 +237,13 @@ class App extends Component {
     this.generateScore(newWord,currentWord)
   }
 
-  generateScore (word,currentWord) {
+  generateScore (currentWord, otherTiles) {
     let sum = this.state.playerOnesScore;
-    let newBoard = this.pushTempBoardToNewBoard();
     let currentSum = 0;
     let total = 0;
     currentWord.forEach(coor => {
       let [y,x] = coor;
       let letter = this.state.tempBoard[y][x];
-      console.log(this.state.tempBoard)
       let bonus = DoubleLetterTiles[`x${x}y${y}`] ? DoubleLetterTiles[`x${x}y${y}`] : TripleLetterTiles[`x${x}y${y}`] ? TripleLetterTiles[`x${x}y${y}`] : 1;
       currentSum += TileScores[letter] * bonus;
     })
@@ -245,14 +252,26 @@ class App extends Component {
       let bonus = DoubleWordTiles[`x${x}y${y}`] ? DoubleWordTiles[`x${x}y${y}`] : TripleWordTiles[`x${x}y${y}`] ? TripleWordTiles[`x${x}y${y}`] : 1;
       currentSum *= bonus;
     })
+    otherTiles.forEach(coor => {
+      let [y,x] = coor
+      let letter = this.state.tempBoard[y][x];
+      if(this.state.board[y][x] === 0) {
+        let bonus = DoubleLetterTiles[`x${x}y${y}`] ? DoubleLetterTiles[`x${x}y${y}`] : TripleLetterTiles[`x${x}y${y}`] ? TripleLetterTiles[`x${x}y${y}`] : 1;
+        currentSum += TileScores[letter] * bonus;
+      }
+    })
     total = sum + currentSum;
+    let newBoard = this.pushTempBoardToNewBoard();
     this.getMoreTiles()
     this.setState({
       playerOnesScore: total,
       currentWord: [],
-      firstTurn: false,
       board: newBoard
-    })
+  })
+  }
+
+  updateThisState(score, newBoard) {
+    
   }
 
   pushTempBoardToNewBoard() {

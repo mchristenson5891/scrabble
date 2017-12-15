@@ -38,7 +38,6 @@ class BoardSquare extends Component {
 
   render() {
     const { x, y, connectDropTarget, isOver, canDrop, board, tempBoard } = this.props;
-    console.log(this.props.children)
     return connectDropTarget(
       <td className={(TileValuesClasses[`x${x}y${y}`] && board[x][y] === 0 && tempBoard[y][x] === 0) ? TileValuesClasses[`x${x}y${y}`] : null}style={{
         position: 'relative'

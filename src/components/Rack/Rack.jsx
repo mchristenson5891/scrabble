@@ -21,9 +21,7 @@ function collect(connect, monitor) {
 class Rack extends Component {
 
   render() {
-    const { playersRack, updatePerviousPosition, removeFromRack, connectDropTarget, updateCurrentLetter, submitWord, tempBoard } = this.props;
-    console.log(tempBoard)
-
+    const { playersRack, updatePerviousPosition, removeFromRack, connectDropTarget, updateCurrentLetter, submitWord } = this.props;
     return connectDropTarget(
       <table className='players-tiles'>
         <tbody>
@@ -39,7 +37,7 @@ class Rack extends Component {
                 arrIndx={idx}
               />
             </td>)}
-          <PlayBtn tempBoard={tempBoard} submitWord={submitWord} />
+          <PlayBtn submitWord={submitWord} />
         </tr>
       </tbody>
     </table>
