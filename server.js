@@ -4,11 +4,10 @@ const logger = require('morgan');
 const app = express();
 
 require('dotenv').config()
-require('./config/database');
-
 
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname,'build')));
+
 
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'))
