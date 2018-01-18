@@ -6,6 +6,13 @@ import Rack from './components/Rack/Rack';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import { TileScores, DoubleLetterTiles, TripleLetterTiles, DoubleWordTiles, TripleWordTiles } from './components/Constants/Constants';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from 'react-router-dom';
+import Splash from './pages/Splash/Splash'
+import PlayBtn from './components/PlayBtn/PlayBtn'
 
 console.log(LetterBag)
 
@@ -44,8 +51,7 @@ class App extends Component {
       currentWord : [],
       playerOnesScore : 0,
       firstTurn: true,
-      activeTiles: true,
-      numberOfPlayers: 2
+      activeTiles: true
     };
   }
 
@@ -65,6 +71,13 @@ class App extends Component {
       tiles : tilesCopy,
       playersRack : rack,
       activeTiles: false
+    })
+  }
+
+  pickNumberOfPlayers = (num) => {
+    console.log(num)
+    this.setState({
+      numberOfPlayers : num
     })
   }
 
@@ -284,31 +297,67 @@ class App extends Component {
   render() {
     const { tilePosition } = this.props
     return (
-      <main>
-        <Board 
-          updateCurrentLetter={this.updateCurrentLetter} 
-          tilePosition={tilePosition} 
-          updateBoard={this.updateBoard} 
-          board={this.state.board} 
-          updatePerviousPosition={this.updatePerviousPosition}
-          isSquareOccupied={this.isSquareOccupied}
-          firstTurn={this.state.firstTurn}
-          tempBoard={this.state.tempBoard}
-          currentLetter={this.state.currentLetter}
-          playerOnesScore={this.state.playerOnesScore}
-        />
-        <h3 className='score'>Your Score: {this.state.playerOnesScore}</h3>
-        <Rack 
-          removeFromRack={this.removeFromRack} 
-          addToRack={this.addToRack} 
-          tiles={this.state.tiles} 
-          playersRack={this.state.playersRack} 
-          updatePerviousPosition={this.updatePerviousPosition} 
-          updateCurrentLetter={this.updateCurrentLetter}
-          submitWord={this.submitWord}
-          tempBoard={this.state.tempBoard}
-        />
-      </main>
+      <div>
+        <Router>
+          <Switch>
+            <Route exact path='/' render={() => 
+              <Splash pickNumberOfPlayers={this.pickNumberOfPlayers}/>
+            }/>
+            <Route exact path='/hello' render={() =>
+              <main> 
+                <Board 
+                    updateCurrentLetter={this.updateCurrentLetter} 
+                    tilePosition={tilePosition} 
+                    updateBoard={this.updateBoard} 
+                    board={this.state.board} 
+                    updatePerviousPosition={this.updatePerviousPosition}
+                    isSquareOccupied={this.isSquareOccupied}
+                    firstTurn={this.state.firstTurn}
+                    tempBoard={this.state.tempBoard}
+                    currentLetter={this.state.currentLetter}
+                    playerOnesScore={this.state.playerOnesScore}
+                  />
+                <h3 className='score'>Your Score: {this.state.playerOnesScore}</h3>
+                <Rack 
+                  removeFromRack={this.removeFromRack} 
+                  addToRack={this.addToRack} 
+                  tiles={this.state.tiles} 
+                  playersRack={this.state.playersRack} 
+                  updatePerviousPosition={this.updatePerviousPosition} 
+                  updateCurrentLetter={this.updateCurrentLetter}
+                  submitWord={this.submitWord}
+                  tempBoard={this.state.tempBoard}
+                />
+                </main>
+            } />
+          </Switch>
+        </Router>
+      </div>
+      // <main>
+      //   <Board 
+      //     updateCurrentLetter={this.updateCurrentLetter} 
+      //     tilePosition={tilePosition} 
+      //     updateBoard={this.updateBoard} 
+      //     board={this.state.board} 
+      //     updatePerviousPosition={this.updatePerviousPosition}
+      //     isSquareOccupied={this.isSquareOccupied}
+      //     firstTurn={this.state.firstTurn}
+      //     tempBoard={this.state.tempBoard}
+      //     currentLetter={this.state.currentLetter}
+      //     playerOnesScore={this.state.playerOnesScore}
+      //   />
+      //   <h3 className='score'>Your Score: {this.state.playerOnesScore}</h3>
+      //   <Rack 
+      //     removeFromRack={this.removeFromRack} 
+      //     addToRack={this.addToRack} 
+      //     tiles={this.state.tiles} 
+      //     playersRack={this.state.playersRack} 
+      //     updatePerviousPosition={this.updatePerviousPosition} 
+      //     updateCurrentLetter={this.updateCurrentLetter}
+      //     submitWord={this.submitWord}
+      //     tempBoard={this.state.tempBoard}
+      //   />
+      // </main>
     );
   }
 }

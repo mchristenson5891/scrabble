@@ -4,11 +4,14 @@ import './index.css';
 import App from './App';
 import { observe } from './components/Game/Game';
 
-const rootEl = document.getElementById('root');
-observe((tilePosition, letter) =>
-  ReactDOM.render(
-    <App tilePosition={tilePosition} letter={letter}/>,
-    rootEl 
-  )
-)
+ReactDOM.render(<App />, document.getElementById('root'));
+
+// const rootEl = document.getElementById('root');
+// observe((tilePosition, letter) =>
+  // ReactDOM.render(
+  //   <App />, rootEl
+    // <App tilePosition={tilePosition} letter={letter}/>,
+    // rootEl 
+  // )
+// )
 
