@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import LetterBag from './components/LetterBag/LetterBag'
 import './App.css';
 import Board from './components/Board/Board';
 import Rack from './components/Rack/Rack';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import { TileScores, DoubleLetterTiles, TripleLetterTiles, DoubleWordTiles, TripleWordTiles } from './components/Constants/Constants';
+
+console.log(LetterBag)
 
 // This is the top level component
 
@@ -25,7 +28,7 @@ class App extends Component {
       tempBoard : this.createBoard(),
       playersRack : this.genTiles(),
       tiles : [ 'a','a','a','a','a','a','a','a','a',
-      'b','b','c','c','d','d','d','d','e',
+      'b','b','c','c','d','d','d','d','e', 
       'e','e','e','e','e','e','e','e','e',
       'e','e','f','f','g','g','g','h','h',
       'i','i','i','i','i','i','i','i','i',
@@ -41,7 +44,8 @@ class App extends Component {
       currentWord : [],
       playerOnesScore : 0,
       firstTurn: true,
-      activeTiles: true
+      activeTiles: true,
+      numberOfPlayers: 2
     };
   }
 
@@ -311,3 +315,4 @@ class App extends Component {
 
 
 export default DragDropContext(HTML5Backend)(App);
+ 
